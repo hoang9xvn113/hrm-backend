@@ -7,6 +7,7 @@ import com.datn.hrm.organization.job.entity.JobTitleEntity;
 import com.datn.hrm.personnel.contract.listener.ContractListener;
 import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
 import com.datn.hrm.setting.personnel.allowance.entity.AllowanceEntity;
+import com.datn.hrm.setting.personnel.category.entity.CategoryEntity;
 import com.datn.hrm.setting.personnel.contract.type.entity.ContractTypeEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,11 +62,6 @@ public class ContractEntity {
             inverseJoinColumns = @JoinColumn(name = "allowanceId")
     )
     List<AllowanceEntity> allowanceEntities;
-
-//    @OneToMany(targetEntity = ContractSalaryEntity.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "contractId", referencedColumnName = "contractId")
-//    List<ContractSalaryEntity> contractSalaryEntities;
-
 
     @Column
     Date effectiveDate;

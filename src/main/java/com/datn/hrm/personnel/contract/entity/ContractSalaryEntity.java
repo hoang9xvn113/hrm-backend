@@ -13,12 +13,14 @@ import javax.persistence.*;
 public class ContractSalaryEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @OneToOne
-    @JoinColumn(name = "category", referencedColumnName = "id")
-    CategoryEntity categoryEntity;
+    @Column
+    long contractId;
+
+    @Column
+    long categoryId;
 
     @Column
     double money;

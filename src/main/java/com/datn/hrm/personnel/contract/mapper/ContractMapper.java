@@ -12,12 +12,15 @@ import com.datn.hrm.personnel.contract.dto.Contract;
 import com.datn.hrm.personnel.contract.dto.ContractSalary;
 import com.datn.hrm.personnel.contract.entity.ContractEntity;
 import com.datn.hrm.personnel.contract.entity.ContractSalaryEntity;
+import com.datn.hrm.personnel.contract.repository.ContractSalaryRepository;
 import com.datn.hrm.personnel.employee.mapper.EmployeeMapper;
 import com.datn.hrm.personnel.employee.repository.EmployeeRepository;
 import com.datn.hrm.setting.personnel.allowance.dto.Allowance;
 import com.datn.hrm.setting.personnel.allowance.entity.AllowanceEntity;
 import com.datn.hrm.setting.personnel.allowance.mapper.AllowanceMapper;
+import com.datn.hrm.setting.personnel.category.entity.CategoryEntity;
 import com.datn.hrm.setting.personnel.category.mapper.CategoryMapper;
+import com.datn.hrm.setting.personnel.category.repository.CategoryRepository;
 import com.datn.hrm.setting.personnel.contract.type.mapper.ContractTypeMapper;
 import com.datn.hrm.setting.personnel.contract.type.repository.ContractTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +58,13 @@ public class ContractMapper implements IMapper<Contract, ContractEntity> {
                         toArray(new Allowance[]{})
         );
 
-//        dto.setContractSalaries(
-//                entity.getContractSalaryEntities().
-//                        stream().
-//                        map((this::mapContractSalaryFromEntity)).
-//                        collect(Collectors.toList()).
-//                        toArray(new ContractSalary[]{})
-//        );
+        dto.setContractSalaries(
+                contractSalaryRepository.findAllByContractId(entity.getId()).
+                        stream().
+                        map((this::mapContractSalaryFromEntity)).
+                        collect(Collectors.toList()).
+                        toArray(new ContractSalary[]{})
+        );
 
         dto.setEffectiveDate(entity.getEffectiveDate());
         dto.setDescription(entity.getDescription());
@@ -77,8 +80,9 @@ public class ContractMapper implements IMapper<Contract, ContractEntity> {
 
         ContractSalary dto = new ContractSalary();
 
-        dto.setCategory(categoryMapper.mapDtoFromEntity(entity.getCategoryEntity()));
+        dto.setCategory(categoryMapper.mapDtoFromEntity(categoryRepository.getReferenceById(entity.getCategoryId())));
         dto.setMoney(entity.getMoney());
+//        dto.setMoney(entity.getMoney());
 
         return dto;
     }
@@ -96,7 +100,6 @@ public class ContractMapper implements IMapper<Contract, ContractEntity> {
     @Override
     public ContractEntity mapEntityFromDto(ContractEntity entity, Contract dto) {
 
-//        dto.setName(entity.getName().trim());
         entity.setCode(dto.getCode());
 
         entity.setEmployeeEntity(employeeRepository.findById(dto.getEmployee().getId()).get());
@@ -117,29 +120,17 @@ public class ContractMapper implements IMapper<Contract, ContractEntity> {
             );
         }
 
-        if (ValidatorUtils.isNotNull(dto.getAllowances())) {
-            entity.setAllowanceEntities(
-                    Arrays.stream(dto.getAllowances()).map((item) -> {
-                        AllowanceEntity allowanceEntity = new AllowanceEntity();
 
-                        allowanceEntity.setId(item.getId());
 
-                        return allowanceEntity;
-                    }).collect(Collectors.toList())
-            );
-        }
 
 //        if (ValidatorUtils.isNotNull(dto.getContractSalaries())) {
 //            entity.setContractSalaryEntities(
 //                    Arrays.stream(dto.getContractSalaries()).map((item) -> {
-//
-//                        ContractSalaryEntity contractSalaryEntity = new ContractSalaryEntity();
 //                        CategoryEntity categoryEntity = new CategoryEntity();
 //
-//                        categoryEntity.setId(item.getCategory().getId());
-//                        contractSalaryEntity.setCategoryEntity(categoryEntity);
-//                        contractSalaryEntity.setMoney(item.getMoney());
-//                        return contractSalaryEntity;
+//                        categoryEntity.setId(item.getId());
+//
+//                        return categoryEntity;
 //                    }).collect(Collectors.toList())
 //            );
 //        }
@@ -184,4 +175,10 @@ public class ContractMapper implements IMapper<Contract, ContractEntity> {
 
     @Autowired
     CategoryMapper categoryMapper;
+
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
+    ContractSalaryRepository contractSalaryRepository;
 }
