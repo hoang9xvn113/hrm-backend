@@ -1,6 +1,7 @@
 package com.datn.hrm.application.resignation.repository;
 
 import com.datn.hrm.application.resignation.entity.ApplicationResignationEntity;
+import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ public interface ApplicationResignationRepository extends JpaRepository<Applicat
 
     Optional<ApplicationResignationEntity> findByName(String name);
 
-    Page<ApplicationResignationEntity> searchAllByNameContainingIgnoreCase(String search, Pageable pageable);
+    Page<ApplicationResignationEntity> getAllByEmployee(EmployeeEntity employee, Pageable pageable);
 
 //    Page<ApplicationResignationEntity> searchAllByNameContainingIgnoreCase(Pageable pageable);
 }

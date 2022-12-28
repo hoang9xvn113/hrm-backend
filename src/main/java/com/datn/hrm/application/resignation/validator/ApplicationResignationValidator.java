@@ -3,8 +3,10 @@ package com.datn.hrm.application.resignation.validator;
 import com.datn.hrm.application.resignation.dto.ApplicationResignation;
 import com.datn.hrm.application.resignation.entity.ApplicationResignationEntity;
 import com.datn.hrm.application.resignation.repository.ApplicationResignationRepository;
+import com.datn.hrm.common.exception.model.BadRequestException;
 import com.datn.hrm.common.exception.model.DuplicateException;
 import com.datn.hrm.common.exception.model.EntityNotFoundException;
+import com.datn.hrm.common.utils.EStatus;
 import com.datn.hrm.common.validator.IValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,17 @@ public class ApplicationResignationValidator implements IValidator<ApplicationRe
         validateInvalidFields(dto);
 
         validateDuplicateForUpdate(id, dto);
+    }
+
+    public void validateForDelete(long id) {
+
+        validateForExist(id);
+
+        ApplicationResignationEntity entity = repository.getReferenceById(id);
+
+        if (entity.getStatus().equalsIgnoreCase(EStatus.APPROVED.getValue())) {
+            throw new BadRequestException("Đơn từ này không thể xóa");
+        }
     }
 
     @Override

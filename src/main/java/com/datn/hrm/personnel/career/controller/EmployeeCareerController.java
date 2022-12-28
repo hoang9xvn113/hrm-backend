@@ -28,8 +28,6 @@ public class EmployeeCareerController implements IController<EmployeeCareer> {
 
         UserModel userModel = provider.getUserFromToken(apiKey);
 
-        employeeValidator.validateForExist(Long.parseLong(filter));
-
         return service.getPage(
                 search,
                 commonPage.getPageable(page, pageSize),

@@ -5,6 +5,11 @@ import com.datn.hrm.application.resignation.entity.ApplicationResignationEntity;
 import com.datn.hrm.application.resignation.mapper.ApplicationResignationMapper;
 import com.datn.hrm.application.resignation.repository.ApplicationResignationRepository;
 import com.datn.hrm.common.service.IService;
+import com.datn.hrm.common.utils.DefaultValue;
+import com.datn.hrm.common.validator.ValidatorUtils;
+import com.datn.hrm.personnel.career.service.EmployeeCareerService;
+import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
+import com.datn.hrm.personnel.employee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +21,19 @@ public class ApplicationResignationService implements IService<ApplicationResign
     @Override
     public Page<ApplicationResignation> getPage(String search, Pageable pageable, String sort, String filter) {
 
-        return mapper.mapDtoEntityFromEntityPage(
-                repository.findAll(pageable)
-        );
+        if (ValidatorUtils.isNotNull(filter)) {
+
+            EmployeeEntity employeeEntity = employeeRepository.getReferenceById(Long.parseLong(filter));
+
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.getAllByEmployee(employeeEntity, pageable)
+            );
+        } else {
+
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.findAll(pageable)
+            );
+        }
     }
 
     @Override
@@ -48,6 +63,22 @@ public class ApplicationResignationService implements IService<ApplicationResign
 
         entity.setStatus(status);
 
+        if (status.equalsIgnoreCase("approved")) {
+
+            employeeCareerService.addObject(
+                    entity.getEmployee().getId(),
+                    DefaultValue.LONG,
+                    DefaultValue.LONG,
+                    DefaultValue.LONG,
+                    DefaultValue.LONG,
+                    entity.getDate(),
+                    "cancel",
+                    entity.getId()
+            );
+        } else {
+            employeeCareerService.deleteObjectByPkId(entity.getId());
+        }
+
         return mapper.mapDtoFromEntity(repository.save(entity));
     }
 
@@ -62,4 +93,10 @@ public class ApplicationResignationService implements IService<ApplicationResign
 
     @Autowired
     ApplicationResignationMapper mapper;
+
+    @Autowired
+    EmployeeCareerService employeeCareerService;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
 }

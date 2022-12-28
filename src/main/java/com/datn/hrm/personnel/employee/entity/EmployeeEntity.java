@@ -1,7 +1,6 @@
 package com.datn.hrm.personnel.employee.entity;
 
 import com.datn.hrm.common.utils.EStatus;
-import com.datn.hrm.personnel.contract.entity.ContractEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -58,10 +57,6 @@ public class EmployeeEntity {
 
     @Column
     String description;
-
-    @OneToOne()
-    @JoinColumn(name = "contractId", referencedColumnName = "id")
-    private ContractEntity contractEntity;
 
     @Column
     String status;

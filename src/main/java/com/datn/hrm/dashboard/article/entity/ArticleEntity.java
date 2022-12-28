@@ -45,7 +45,7 @@ public class ArticleEntity {
     Date createDate;
 
     @Column
-    long creatorId;
+    Long creatorId;
 
     @PreUpdate
     void preUpdate() {

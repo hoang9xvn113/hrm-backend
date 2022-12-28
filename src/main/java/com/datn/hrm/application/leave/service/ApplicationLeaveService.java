@@ -5,6 +5,9 @@ import com.datn.hrm.application.leave.entity.ApplicationLeaveEntity;
 import com.datn.hrm.application.leave.mapper.ApplicationLeaveMapper;
 import com.datn.hrm.application.leave.repository.ApplicationLeaveRepository;
 import com.datn.hrm.common.service.IService;
+import com.datn.hrm.common.validator.ValidatorUtils;
+import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
+import com.datn.hrm.personnel.employee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +19,19 @@ public class ApplicationLeaveService implements IService<ApplicationLeave> {
     @Override
     public Page<ApplicationLeave> getPage(String search, Pageable pageable, String sort, String filter) {
 
-        return mapper.mapDtoEntityFromEntityPage(
-                repository.findAll(pageable)
-        );
+        if (ValidatorUtils.isNotNull(filter)) {
+
+            EmployeeEntity employeeEntity = employeeRepository.getReferenceById(Long.parseLong(filter));
+
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.getAllByEmployee(employeeEntity, pageable)
+            );
+        } else {
+
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.findAll(pageable)
+            );
+        }
     }
 
     @Override
@@ -62,4 +75,7 @@ public class ApplicationLeaveService implements IService<ApplicationLeave> {
 
     @Autowired
     ApplicationLeaveMapper mapper;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
 }

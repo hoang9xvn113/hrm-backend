@@ -2,7 +2,9 @@ package com.datn.hrm.personnel.contract.service;
 
 import com.datn.hrm.common.service.IService;
 import com.datn.hrm.common.validator.ValidatorUtils;
+import com.datn.hrm.personnel.career.entity.EmployeeCareerEntity;
 import com.datn.hrm.personnel.career.repository.EmployeeCareerRepository;
+import com.datn.hrm.personnel.career.service.EmployeeCareerService;
 import com.datn.hrm.personnel.contract.dto.Contract;
 import com.datn.hrm.personnel.contract.entity.ContractEntity;
 import com.datn.hrm.personnel.contract.entity.ContractSalaryEntity;
@@ -26,9 +28,15 @@ public class ContractService implements IService<Contract> {
     @Override
     public Page<Contract> getPage(String search, Pageable pageable, String sort, String filter) {
 
-        return mapper.mapDtoEntityFromEntityPage(
-                repository.searchAllByCodeContainingIgnoreCase(search, pageable)
-        );
+        if (ValidatorUtils.isNull(filter)) {
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.searchAllByCodeContainingIgnoreCase(search, pageable)
+            );
+        } else {
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.searchAllByEmployeeEntity(employeeRepository.getReferenceById(Long.parseLong(filter)), pageable)
+            );
+        }
     }
 
     @Override
@@ -97,17 +105,16 @@ public class ContractService implements IService<Contract> {
 
         entity.setStatus(status);
 
-        entity = repository.save(entity);
-
-        EmployeeEntity employee = entity.getEmployeeEntity();
-
-        ContractEntity contractEntity = employee.getContractEntity();
-
-        if (ValidatorUtils.isNull(contractEntity) || contractEntity.getEffectiveDate().before(entity.getEffectiveDate())) {
-            employee.setContractEntity(entity);
-
-            employeeRepository.save(employee);
-        }
+        employeeCareerService.addObject(
+                entity.getEmployeeEntity().getId(),
+                entity.getDepartmentEntity().getId(),
+                entity.getJobPositionEntity().getId(),
+                entity.getJobTitleEntity().getId(),
+                entity.getContractTypeEntity().getId(),
+                entity.getEffectiveDate(),
+                "pending",
+                entity.getId()
+        );
 
         return mapper.mapDtoFromEntity(entity);
     }
@@ -132,4 +139,7 @@ public class ContractService implements IService<Contract> {
 
     @Autowired
     ContractSalaryRepository contractSalaryRepository;
+
+    @Autowired
+    EmployeeCareerService employeeCareerService;
 }

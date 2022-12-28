@@ -51,7 +51,7 @@ public class ContractController implements IController<Contract> {
 
         UserModel userModel = provider.getUserFromToken(apiKey);
 
-        validator.validateForExist(id);
+        validator.validateForDelete(id);
 
         service.deleteObject(id);
     }

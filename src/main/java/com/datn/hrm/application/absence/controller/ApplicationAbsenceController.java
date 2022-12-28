@@ -54,7 +54,7 @@ public class ApplicationAbsenceController implements IController<ApplicationAbse
 
         UserModel userModel = provider.getUserFromToken(apiKey);
 
-        validator.validateForExist(id);
+        validator.validateForDelete(id);
 
         service.deleteObject(id);
     }

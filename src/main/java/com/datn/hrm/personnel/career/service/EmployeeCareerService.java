@@ -1,6 +1,7 @@
 package com.datn.hrm.personnel.career.service;
 
 import com.datn.hrm.common.service.IService;
+import com.datn.hrm.common.validator.ValidatorUtils;
 import com.datn.hrm.organization.department.entity.DepartmentEntity;
 import com.datn.hrm.organization.job.entity.JobPositionEntity;
 import com.datn.hrm.organization.job.entity.JobTitleEntity;
@@ -13,10 +14,12 @@ import com.datn.hrm.personnel.employee.repository.EmployeeRepository;
 import com.datn.hrm.setting.personnel.contract.type.entity.ContractTypeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Service
@@ -25,18 +28,24 @@ public class EmployeeCareerService implements IService<EmployeeCareer> {
     @Override
     public Page<EmployeeCareer> getPage(String search, Pageable pageable, String sort, String filter) {
 
-        return mapper.mapDtoEntityFromEntityPage(
-                repository.getAllByEmployeeEntity(employeeRepository.findById(Long.parseLong(filter)).get(), Pageable.unpaged())
-        );
+        if (ValidatorUtils.isNotNull(filter)) {
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.getAllByEmployeeId(Long.parseLong(filter), pageable)
+            );
+        } else {
+            return new PageImpl<>(new ArrayList<>());
+        }
     }
 
     public EmployeeCareerEntity addObject(
-            EmployeeEntity employeeEntity,
-            DepartmentEntity departmentEntity,
-            JobPositionEntity jobPositionEntity,
-            JobTitleEntity jobTitleEntity,
-            ContractTypeEntity contractTypeEntity,
-            Date effectiveDate
+            long employeeEntity,
+            long departmentEntity,
+            long jobPositionEntity,
+            long jobTitleEntity,
+            long contractTypeEntity,
+            Date effectiveDate,
+            String status,
+            Long pkId
     ) {
 
         return repository.save(
@@ -46,7 +55,9 @@ public class EmployeeCareerService implements IService<EmployeeCareer> {
                         jobPositionEntity,
                         jobTitleEntity,
                         contractTypeEntity,
-                        effectiveDate
+                        effectiveDate,
+                        status,
+                        pkId
                 )
         );
     }
@@ -79,6 +90,16 @@ public class EmployeeCareerService implements IService<EmployeeCareer> {
         repository.deleteById(id);
     }
 
+    public void deleteObjectByPkId(long pkId) {
+
+        EmployeeCareerEntity entity = repository.getEmployeeCareerEntityByPkId(pkId);
+
+        if (ValidatorUtils.isNotNull(entity)) {
+
+            repository.delete(entity);
+        }
+    }
+
     @Autowired
     EmployeeCareerRepository repository;
 
@@ -87,4 +108,7 @@ public class EmployeeCareerService implements IService<EmployeeCareer> {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    @Autowired
+    EmployeeCareerRepository employeeCareerRepository;
 }

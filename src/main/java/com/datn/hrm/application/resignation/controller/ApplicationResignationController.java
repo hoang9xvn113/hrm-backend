@@ -53,7 +53,7 @@ public class ApplicationResignationController implements IController<Application
 
         UserModel userModel = provider.getUserFromToken(apiKey);
 
-        validator.validateForExist(id);
+        validator.validateForDelete(id);
 
         service.deleteObject(id);
     }

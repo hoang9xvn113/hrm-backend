@@ -3,10 +3,12 @@ package com.datn.hrm.application.absence.validator;
 import com.datn.hrm.application.absence.dto.ApplicationAbsence;
 import com.datn.hrm.application.absence.entity.ApplicationAbsenceEntity;
 import com.datn.hrm.application.absence.repository.ApplicationAbsenceRepository;
+import com.datn.hrm.application.leave.entity.ApplicationLeaveEntity;
 import com.datn.hrm.application.utils.ApplicationUtils;
 import com.datn.hrm.common.exception.model.BadRequestException;
 import com.datn.hrm.common.exception.model.DuplicateException;
 import com.datn.hrm.common.exception.model.EntityNotFoundException;
+import com.datn.hrm.common.utils.EStatus;
 import com.datn.hrm.common.validator.IValidator;
 import com.datn.hrm.setting.application.absence.entity.AbsenceReasonEntity;
 import com.datn.hrm.setting.application.absence.repository.AbsenceReasonRepository;
@@ -47,6 +49,17 @@ public class ApplicationAbsenceValidator implements IValidator<ApplicationAbsenc
         validateInvalidFields(dto);
 
 //        validateDuplicateForUpdate(id, dto);
+    }
+
+    public void validateForDelete(long id) {
+
+        validateForExist(id);
+
+        ApplicationAbsenceEntity entity = repository.getReferenceById(id);
+
+        if (entity.getStatus().equalsIgnoreCase(EStatus.APPROVED.getValue())) {
+            throw new BadRequestException("Đơn từ này không thể xóa");
+        }
     }
 
     @Override

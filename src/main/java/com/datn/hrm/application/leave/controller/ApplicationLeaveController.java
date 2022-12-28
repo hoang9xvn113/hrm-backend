@@ -51,7 +51,7 @@ public class ApplicationLeaveController implements IController<ApplicationLeave>
 
         UserModel userModel = provider.getUserFromToken(apiKey);
 
-        validator.validateForExist(id);
+        validator.validateForDelete(id);
 
         service.deleteObject(id);
     }

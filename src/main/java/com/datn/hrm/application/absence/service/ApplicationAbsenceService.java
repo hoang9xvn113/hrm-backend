@@ -5,6 +5,9 @@ import com.datn.hrm.application.absence.entity.ApplicationAbsenceEntity;
 import com.datn.hrm.application.absence.mapper.ApplicationAbsenceMapper;
 import com.datn.hrm.application.absence.repository.ApplicationAbsenceRepository;
 import com.datn.hrm.common.service.IService;
+import com.datn.hrm.common.validator.ValidatorUtils;
+import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
+import com.datn.hrm.personnel.employee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +19,19 @@ public class ApplicationAbsenceService implements IService<ApplicationAbsence> {
     @Override
     public Page<ApplicationAbsence> getPage(String search, Pageable pageable, String sort, String filter) {
 
-        return mapper.mapDtoEntityFromEntityPage(
-                repository.findAll(pageable)
-        );
+        if (ValidatorUtils.isNotNull(filter)) {
+
+            EmployeeEntity employeeEntity = employeeRepository.getReferenceById(Long.parseLong(filter));
+
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.getAllByEmployee(employeeEntity, pageable)
+            );
+        } else {
+
+            return mapper.mapDtoEntityFromEntityPage(
+                    repository.findAll(pageable)
+            );
+        }
     }
 
     @Override
@@ -62,4 +75,7 @@ public class ApplicationAbsenceService implements IService<ApplicationAbsence> {
 
     @Autowired
     ApplicationAbsenceMapper mapper;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
 }

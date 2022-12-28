@@ -26,6 +26,10 @@ public class EmployeeCareer {
 
     Department department;
 
+    String status;
+
+    Date effectiveDate;
+
     Date modifiedDate;
 
     Date createDate;

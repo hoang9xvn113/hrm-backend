@@ -1,8 +1,10 @@
 package com.datn.hrm.personnel.contract.validator;
 
+import com.datn.hrm.application.absence.entity.ApplicationAbsenceEntity;
 import com.datn.hrm.common.exception.model.BadRequestException;
 import com.datn.hrm.common.exception.model.DuplicateException;
 import com.datn.hrm.common.exception.model.EntityNotFoundException;
+import com.datn.hrm.common.utils.EStatus;
 import com.datn.hrm.common.validator.IValidator;
 import com.datn.hrm.common.validator.ValidatorUtils;
 import com.datn.hrm.personnel.contract.dto.Contract;
@@ -44,6 +46,17 @@ public class ContractValidator implements IValidator<Contract> {
         validateInvalidFields(dto);
 
         validateDuplicateForUpdate(id, dto);
+    }
+
+    public void validateForDelete(long id) {
+
+        validateForExist(id);
+
+        ContractEntity entity = repository.getReferenceById(id);
+
+        if (entity.getStatus().equalsIgnoreCase(EStatus.APPROVED.getValue())) {
+            throw new BadRequestException("Hợp đồng này không thể xóa");
+        }
     }
 
     @Override

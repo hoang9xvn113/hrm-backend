@@ -35,12 +35,33 @@ public class EmployeeCareerMapper implements IMapper<EmployeeCareer, EmployeeCar
 
         dto.setId(entity.getId());
 
-        entity.setEmployeeEntity(employeeRepository.findById(dto.getEmployee().getId()).get());
-        entity.setContractTypeEntity(contractTypeRepository.findById(dto.getContractType().getId()).get());
-        entity.setDepartmentEntity(departmentRepository.findById(dto.getDepartment().getId()).get());
-        entity.setJobPositionEntity(jobPositionRepository.findById(dto.getJobPosition().getId()).get());
-        entity.setJobTitleEntity(jobTitleRepository.findById(dto.getJobTitle().getId()).get());
+        employeeRepository
+                .findById(entity.getEmployeeId())
+                .ifPresent(employeeEntity ->
+                        dto.setEmployee(employeeMapper.mapDtoFromEntity(employeeEntity)));
 
+        contractTypeRepository
+                .findById(entity.getContractTypeId())
+                .ifPresent(contractTypeEntity ->
+                        dto.setContractType(contractTypeMapper.mapDtoFromEntity(contractTypeEntity)));
+
+        departmentRepository
+                .findById(entity.getDepartmentId())
+                .ifPresent(departmentEntity ->
+                        dto.setDepartment(departmentMapper.mapDtoFromEntity(departmentEntity)));
+
+        jobPositionRepository
+                .findById(entity.getJobPositionId())
+                .ifPresent(jobPositionEntity ->
+                        dto.setJobPosition(jobPositionMapper.mapDtoFromEntity(jobPositionEntity)));
+
+        jobTitleRepository
+                .findById(entity.getJobTitleId())
+                .ifPresent(jobTitleEntity ->
+                        dto.setJobTitle(jobTitleMapper.mapDtoFromEntity(jobTitleEntity)));
+
+        dto.setEffectiveDate(entity.getEffectiveDate());
+        dto.setStatus(entity.getStatus());
         dto.setCreatorId(entity.getCreatorId());
         dto.setCreateDate(entity.getCreateDate());
         dto.setModifiedDate(entity.getModifiedDate());
@@ -59,21 +80,25 @@ public class EmployeeCareerMapper implements IMapper<EmployeeCareer, EmployeeCar
     }
 
     public EmployeeCareerEntity mapEntity(
-            EmployeeEntity employeeEntity,
-            DepartmentEntity departmentEntity,
-            JobPositionEntity jobPositionEntity,
-            JobTitleEntity jobTitleEntity,
-            ContractTypeEntity contractTypeEntity,
-            Date effectiveDate
+            long employeeEntity,
+            long departmentEntity,
+            long jobPositionEntity,
+            long jobTitleEntity,
+            long contractTypeEntity,
+            Date effectiveDate,
+            String status,
+            Long pkId
     ) {
         EmployeeCareerEntity entity = new EmployeeCareerEntity();
 
-        entity.setEmployeeEntity(employeeEntity);
-        entity.setDepartmentEntity(departmentEntity);
-        entity.setJobPositionEntity(jobPositionEntity);
-        entity.setJobTitleEntity(jobTitleEntity);
-        entity.setContractTypeEntity(contractTypeEntity);
+        entity.setEmployeeId(employeeEntity);
+        entity.setDepartmentId(departmentEntity);
+        entity.setJobPositionId(jobPositionEntity);
+        entity.setJobTitleId(jobTitleEntity);
+        entity.setContractTypeId(contractTypeEntity);
         entity.setEffectiveDate(effectiveDate);
+        entity.setStatus(status);
+        entity.setPkId(pkId);
 
         return entity;
     }
@@ -81,11 +106,11 @@ public class EmployeeCareerMapper implements IMapper<EmployeeCareer, EmployeeCar
     @Override
     public EmployeeCareerEntity mapEntityFromDto(EmployeeCareerEntity entity, EmployeeCareer dto) {
 
-        entity.setEmployeeEntity(employeeRepository.findById(dto.getEmployee().getId()).get());
-        entity.setDepartmentEntity(departmentRepository.findById(dto.getDepartment().getId()).get());
-        entity.setJobPositionEntity(jobPositionRepository.findById(dto.getJobPosition().getId()).get());
-        entity.setJobTitleEntity(jobTitleRepository.findById(dto.getJobTitle().getId()).get());
-        entity.setContractTypeEntity(contractTypeRepository.findById(dto.getContractType().getId()).get());
+        entity.setEmployeeId(dto.getEmployee().getId());
+        entity.setDepartmentId(dto.getDepartment().getId());
+        entity.setJobPositionId(dto.getJobPosition().getId());
+        entity.setJobTitleId(dto.getJobTitle().getId());
+        entity.setContractTypeId(dto.getContractType().getId());
 
         return entity;
     }

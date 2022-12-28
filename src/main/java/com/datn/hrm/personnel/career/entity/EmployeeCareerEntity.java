@@ -24,28 +24,27 @@ public class EmployeeCareerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee", nullable = false)
-    private EmployeeEntity employeeEntity;
+    @Column
+    long employeeId;
 
-    @ManyToOne
-    @JoinColumn(name = "contractType", nullable = false)
-    private ContractTypeEntity contractTypeEntity;
+    @Column
+    long contractTypeId;
 
-    @ManyToOne
-    @JoinColumn(name = "jobTitle", nullable = false)
-    private JobTitleEntity jobTitleEntity;
+    @Column
+    long jobTitleId;
 
-    @ManyToOne
-    @JoinColumn(name = "jobPosition", nullable = false)
-    private JobPositionEntity jobPositionEntity;
+    @Column
+    long jobPositionId;
 
-    @ManyToOne
-    @JoinColumn(name = "department", nullable = false)
-    private DepartmentEntity departmentEntity;
+    @Column
+    long departmentId;
 
     @Column
     Date effectiveDate;
+
+    @Column
+    Long pkId;
+
     @Column
     String status;
 
@@ -69,6 +68,6 @@ public class EmployeeCareerEntity {
     void prePersist() {
         this.createDate = new Date();
         this.modifiedDate = new Date();
-        this.status = EStatus.PENDING.getValue();
+//        this.status = EStatus.PENDING.getValue();
     }
 }

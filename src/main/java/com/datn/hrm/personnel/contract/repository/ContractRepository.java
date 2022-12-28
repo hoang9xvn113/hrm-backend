@@ -1,6 +1,7 @@
 package com.datn.hrm.personnel.contract.repository;
 
 import com.datn.hrm.personnel.contract.entity.ContractEntity;
+import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,8 @@ public interface ContractRepository extends JpaRepository<ContractEntity, Long> 
 //    Optional<ContractEntity> findByName(String name);
 
     Optional<ContractEntity> findByCode(String code);
+
+    Page<ContractEntity> searchAllByEmployeeEntity(EmployeeEntity employeeEntity, Pageable pageable);
 
     Page<ContractEntity> searchAllByCodeContainingIgnoreCase(String search, Pageable pageable);
 }

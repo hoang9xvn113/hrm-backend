@@ -39,13 +39,15 @@ public class ContractTypeMapper implements IMapper<ContractType, ContractTypeEnt
             dto.setCategoryName(data.getName());
         });
 
-        dto.setAllowances(
-                entity.getAllowanceEntities().
-                        stream().
-                        map((allowanceEntity -> allowanceMapper.mapDtoFromEntity(allowanceEntity))).
-                        collect(Collectors.toList()).
-                        toArray(new Allowance[]{})
-        );
+        if (ValidatorUtils.isNotNull(dto.getAllowances())) {
+            dto.setAllowances(
+                    entity.getAllowanceEntities().
+                            stream().
+                            map((allowanceEntity -> allowanceMapper.mapDtoFromEntity(allowanceEntity))).
+                            collect(Collectors.toList()).
+                            toArray(new Allowance[]{})
+            );
+        }
 
         dto.setCreatorId(entity.getCreatorId());
         dto.setCreateDate(entity.getCreateDate());

@@ -1,6 +1,7 @@
 package com.datn.hrm.application.leave.repository;
 
 import com.datn.hrm.application.leave.entity.ApplicationLeaveEntity;
+import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
 import com.datn.hrm.setting.application.leave.entity.LeaveReasonEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ public interface ApplicationLeaveRepository extends JpaRepository<ApplicationLea
 
     Optional<ApplicationLeaveEntity> findByName(String name);
 
-    Page<ApplicationLeaveEntity> searchAllByEmployee_Name(String search, Pageable pageable);
+    Page<ApplicationLeaveEntity> getAllByEmployee(EmployeeEntity employeeEntity, Pageable pageable);
 
     List<ApplicationLeaveEntity> getAllByStartDateBetweenAndReason(Date startDate, Date endDate, LeaveReasonEntity leaveReasonEntity);
 

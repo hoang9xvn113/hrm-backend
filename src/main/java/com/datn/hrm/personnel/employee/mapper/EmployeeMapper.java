@@ -2,10 +2,23 @@ package com.datn.hrm.personnel.employee.mapper;
 
 import com.datn.hrm.common.mapper.IMapper;
 import com.datn.hrm.common.validator.ValidatorUtils;
+import com.datn.hrm.organization.department.entity.DepartmentEntity;
+import com.datn.hrm.organization.department.repository.DepartmentRepository;
+import com.datn.hrm.organization.job.entity.JobPositionEntity;
+import com.datn.hrm.organization.job.entity.JobTitleEntity;
+import com.datn.hrm.organization.job.repository.JobPositionRepository;
+import com.datn.hrm.organization.job.repository.JobTitleRepository;
+import com.datn.hrm.personnel.career.entity.EmployeeCareerEntity;
+import com.datn.hrm.personnel.career.repository.EmployeeCareerRepository;
 import com.datn.hrm.personnel.employee.dto.Employee;
 import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeMapper implements IMapper<Employee, EmployeeEntity> {
@@ -30,15 +43,30 @@ public class EmployeeMapper implements IMapper<Employee, EmployeeEntity> {
         dto.setDescription(entity.getDescription());
         dto.setHandoverPlace(entity.getHandoverPlace());
         dto.setStartDate(entity.getStartDate());
+        dto.setStatus(entity.getStatus());
 
-        if (ValidatorUtils.isNotNull(entity.getContractEntity())) {
+        List<EmployeeCareerEntity> employeeCareerEntities = employeeCareerRepository.
+                getEmployeeCareers(entity.getId(), new Date());
 
-            dto.setPosition(entity.getContractEntity().getJobPositionEntity().getName());
-            dto.setJobTitle(entity.getContractEntity().getJobTitleEntity().getName());
-            dto.setDepartment(entity.getContractEntity().getDepartmentEntity().getName());
+        if (employeeCareerEntities.size() > 0) {
+
+            EmployeeCareerEntity employeeCareerEntity = employeeCareerEntities.get(0);
+
+            Optional<DepartmentEntity> departmentEntity = departmentRepository.findById(employeeCareerEntity.getDepartmentId());
+
+            departmentEntity.ifPresent(department -> dto.setDepartment(entity.getName()));
+
+            Optional<JobPositionEntity> jobPositionEntity = jobPositionRepository.findById(employeeCareerEntity.getJobPositionId());
+
+            jobPositionEntity.ifPresent(positionEntity -> dto.setPosition(positionEntity.getName()));
+
+            Optional<JobTitleEntity> jobTitleEntity = jobTitleRepository.findById(employeeCareerEntity.getJobTitleId());
+
+            jobTitleEntity.ifPresent(jobTitle -> dto.setJobTitle(jobTitle.getName()));
+
+            dto.setStatus(employeeCareerEntity.getStatus());
         }
 
-        dto.setStatus(entity.getStatus());
         dto.setCreatorId(entity.getCreatorId());
         dto.setCreateDate(entity.getCreateDate());
         dto.setModifiedDate(entity.getModifiedDate());
@@ -81,4 +109,19 @@ public class EmployeeMapper implements IMapper<Employee, EmployeeEntity> {
 
         return entities.map(this::mapDtoFromEntity);
     }
+
+//    @Autowired
+//    EmployeeCareerService employeeCareerService;
+
+    @Autowired
+    EmployeeCareerRepository employeeCareerRepository;
+
+    @Autowired
+    JobPositionRepository jobPositionRepository;
+
+    @Autowired
+    JobTitleRepository jobTitleRepository;
+
+    @Autowired
+    DepartmentRepository departmentRepository;
 }
