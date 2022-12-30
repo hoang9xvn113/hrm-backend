@@ -60,6 +60,7 @@ public class EmployeeCareerMapper implements IMapper<EmployeeCareer, EmployeeCar
                 .ifPresent(jobTitleEntity ->
                         dto.setJobTitle(jobTitleMapper.mapDtoFromEntity(jobTitleEntity)));
 
+        dto.setPkId(entity.getPkId());
         dto.setEffectiveDate(entity.getEffectiveDate());
         dto.setStatus(entity.getStatus());
         dto.setCreatorId(entity.getCreatorId());

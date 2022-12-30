@@ -2,6 +2,7 @@ package com.datn.hrm.common.utils;
 
 public enum EStatus {
 
+    CANCEL("cancel"),
     PENDING("pending"),
     APPROVED("approved"),
     DENIED("denied"),

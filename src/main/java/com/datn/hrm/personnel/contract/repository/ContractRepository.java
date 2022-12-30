@@ -16,7 +16,7 @@ public interface ContractRepository extends JpaRepository<ContractEntity, Long> 
 
     Optional<ContractEntity> findByCode(String code);
 
-    Page<ContractEntity> searchAllByEmployeeEntity(EmployeeEntity employeeEntity, Pageable pageable);
+    Page<ContractEntity> searchAllByEmployeeEntityAndCodeContainingIgnoreCaseOrderByModifiedDateDesc(EmployeeEntity employeeEntity, String search, Pageable pageable);
 
-    Page<ContractEntity> searchAllByCodeContainingIgnoreCase(String search, Pageable pageable);
+    Page<ContractEntity> searchAllByCodeContainingIgnoreCaseOrderByModifiedDateDesc(String search, Pageable pageable);
 }

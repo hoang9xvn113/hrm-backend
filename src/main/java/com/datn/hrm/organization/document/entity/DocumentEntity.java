@@ -24,6 +24,12 @@ public class DocumentEntity {
     String name;
 
     @Column
+    Long pkId;
+
+    @Column
+    String appId;
+
+    @Column
     String type;
 
     @Column

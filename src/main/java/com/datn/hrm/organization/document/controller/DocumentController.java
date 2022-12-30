@@ -2,7 +2,6 @@ package com.datn.hrm.organization.document.controller;
 
 import com.datn.hrm.common.function.CommonPage;
 import com.datn.hrm.common.utils.GetterUtils;
-import com.datn.hrm.common.validator.ValidatorUtils;
 import com.datn.hrm.login.dto.UserModel;
 import com.datn.hrm.login.provider.JwtTokenProvider;
 import com.datn.hrm.organization.document.dto.Document;
@@ -28,6 +27,8 @@ public class DocumentController {
     @GetMapping("/o/documents")
     public Page<Document> getPage(
             @RequestHeader(value = "api-key", required = false) String apiKey,
+            @RequestParam(value = "pkId", required = true) Long pkId,
+            @RequestParam(value = "appId", required = true) String appId,
             @RequestParam(value = "parentId", required = false) Long parentId,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", required = false) Integer page,
@@ -40,6 +41,8 @@ public class DocumentController {
         validator.validateExist(parentId);
 
         return service.getPage(
+                pkId,
+                appId,
                 GetterUtils.getLong(parentId),
                 search,
                 commonPage.getPageable(page, pageSize),
@@ -119,7 +122,7 @@ public class DocumentController {
 
         validator.validateDuplicateForAdd(dto.getName(), dto.getParentId());
 
-        service.createFolder(dto.getParentId(), dto.getName());
+        service.createFolder(dto.getParentId(), dto.getName(), dto.getPkId(), dto.getAppId());
     }
 
     @PostMapping(
@@ -130,6 +133,8 @@ public class DocumentController {
             }
     )
     public void uploadFile(
+            @RequestPart("pkId") String pkId,
+            @RequestPart("appId") String appId,
             @RequestPart("parentId") String parentId,
             @RequestPart(value = "action") String action,
             @RequestPart("file") MultipartFile multipartFile) throws Exception {
@@ -142,7 +147,7 @@ public class DocumentController {
 
         validator.validateSize(multipartFile.getSize());
 
-        service.uploadFile(Long.parseLong(parentId), action, multipartFile);
+        service.uploadFile(Long.parseLong(pkId), appId, Long.parseLong(parentId), action, multipartFile);
     }
 
     @Autowired

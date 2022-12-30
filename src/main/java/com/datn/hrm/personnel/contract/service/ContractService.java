@@ -1,8 +1,8 @@
 package com.datn.hrm.personnel.contract.service;
 
 import com.datn.hrm.common.service.IService;
+import com.datn.hrm.common.utils.EStatus;
 import com.datn.hrm.common.validator.ValidatorUtils;
-import com.datn.hrm.personnel.career.entity.EmployeeCareerEntity;
 import com.datn.hrm.personnel.career.repository.EmployeeCareerRepository;
 import com.datn.hrm.personnel.career.service.EmployeeCareerService;
 import com.datn.hrm.personnel.contract.dto.Contract;
@@ -11,7 +11,6 @@ import com.datn.hrm.personnel.contract.entity.ContractSalaryEntity;
 import com.datn.hrm.personnel.contract.mapper.ContractMapper;
 import com.datn.hrm.personnel.contract.repository.ContractRepository;
 import com.datn.hrm.personnel.contract.repository.ContractSalaryRepository;
-import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
 import com.datn.hrm.personnel.employee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,11 +29,16 @@ public class ContractService implements IService<Contract> {
 
         if (ValidatorUtils.isNull(filter)) {
             return mapper.mapDtoEntityFromEntityPage(
-                    repository.searchAllByCodeContainingIgnoreCase(search, pageable)
+                    repository.searchAllByCodeContainingIgnoreCaseOrderByModifiedDateDesc(search, pageable)
             );
         } else {
             return mapper.mapDtoEntityFromEntityPage(
-                    repository.searchAllByEmployeeEntity(employeeRepository.getReferenceById(Long.parseLong(filter)), pageable)
+                    repository.
+                            searchAllByEmployeeEntityAndCodeContainingIgnoreCaseOrderByModifiedDateDesc(
+                                    employeeRepository.getReferenceById(Long.parseLong(filter)),
+                                    search,
+                                    pageable
+                            )
             );
         }
     }
@@ -105,16 +109,20 @@ public class ContractService implements IService<Contract> {
 
         entity.setStatus(status);
 
-        employeeCareerService.addObject(
-                entity.getEmployeeEntity().getId(),
-                entity.getDepartmentEntity().getId(),
-                entity.getJobPositionEntity().getId(),
-                entity.getJobTitleEntity().getId(),
-                entity.getContractTypeEntity().getId(),
-                entity.getEffectiveDate(),
-                "pending",
-                entity.getId()
-        );
+        if (status.equalsIgnoreCase(EStatus.APPROVED.getValue())) {
+            employeeCareerService.addObject(
+                    entity.getEmployeeEntity().getId(),
+                    entity.getDepartmentEntity().getId(),
+                    entity.getJobPositionEntity().getId(),
+                    entity.getJobTitleEntity().getId(),
+                    entity.getContractTypeEntity().getId(),
+                    entity.getEffectiveDate(),
+                    EStatus.PENDING.getValue(),
+                    entity.getId()
+            );
+        } else {
+            employeeCareerService.deleteObjectByPkId(entity.getId(), EStatus.PENDING.getValue());
+        }
 
         return mapper.mapDtoFromEntity(entity);
     }

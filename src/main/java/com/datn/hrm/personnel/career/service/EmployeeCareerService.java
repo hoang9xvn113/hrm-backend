@@ -30,7 +30,7 @@ public class EmployeeCareerService implements IService<EmployeeCareer> {
 
         if (ValidatorUtils.isNotNull(filter)) {
             return mapper.mapDtoEntityFromEntityPage(
-                    repository.getAllByEmployeeId(Long.parseLong(filter), pageable)
+                    repository.getAllByEmployeeIdOrderByModifiedDateDesc(Long.parseLong(filter), pageable)
             );
         } else {
             return new PageImpl<>(new ArrayList<>());
@@ -90,9 +90,9 @@ public class EmployeeCareerService implements IService<EmployeeCareer> {
         repository.deleteById(id);
     }
 
-    public void deleteObjectByPkId(long pkId) {
+    public void deleteObjectByPkId(long pkId, String status) {
 
-        EmployeeCareerEntity entity = repository.getEmployeeCareerEntityByPkId(pkId);
+        EmployeeCareerEntity entity = repository.getEmployeeCareerEntityByPkIdAndStatus(pkId, status);
 
         if (ValidatorUtils.isNotNull(entity)) {
 

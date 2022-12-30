@@ -24,6 +24,8 @@ public class DocumentMapper implements IMapper<Document, DocumentEntity> {
         dto.setSize(entity.getSize());
         dto.setParentId(entity.getParentId());
         dto.setTreePath(entity.getTreePath());
+        dto.setAppId(entity.getAppId());
+        dto.setPkId(entity.getPkId());
 
         dto.setCreatorId(entity.getCreatorId());
         dto.setCreateDate(entity.getCreateDate());
@@ -49,7 +51,9 @@ public class DocumentMapper implements IMapper<Document, DocumentEntity> {
             String treePath,
             Long size,
             String contentType,
-            String extension
+            String extension,
+            Long pkId,
+            String appId
     ) {
 
         DocumentEntity entity = new DocumentEntity();
@@ -61,6 +65,8 @@ public class DocumentMapper implements IMapper<Document, DocumentEntity> {
         entity.setContentType(contentType);
         entity.setExtension(extension);
         entity.setSize(size);
+        entity.setAppId(appId);
+        entity.setPkId(pkId);
 
         return entity;
     }
@@ -69,7 +75,8 @@ public class DocumentMapper implements IMapper<Document, DocumentEntity> {
     public DocumentEntity mapEntityFromDto(DocumentEntity entity, Document dto) {
 
         entity.setName(dto.getName().trim());
-
+        entity.setPkId(dto.getPkId());
+        entity.setAppId(dto.getAppId());
 
         return entity;
     }

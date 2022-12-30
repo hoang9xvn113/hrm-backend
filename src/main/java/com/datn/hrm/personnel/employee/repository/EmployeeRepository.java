@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
 
-    Page<EmployeeEntity> searchAllByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<EmployeeEntity> searchAllByNameContainingIgnoreCaseOrderByModifiedDateDesc(String name, Pageable pageable);
 }

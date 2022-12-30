@@ -17,6 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
 
         http.authorizeRequests()
+                .antMatchers("/documents").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/o/*").permitAll()
                 .antMatchers("/o/*/*").permitAll();// Cho phép tất cả mọi người truy cập vào địa chỉ này

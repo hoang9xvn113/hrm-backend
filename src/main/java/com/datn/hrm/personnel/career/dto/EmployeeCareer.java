@@ -16,6 +16,8 @@ public class EmployeeCareer {
 
     long id;
 
+    Long pkId;
+
     Employee employee;
 
     ContractType contractType;

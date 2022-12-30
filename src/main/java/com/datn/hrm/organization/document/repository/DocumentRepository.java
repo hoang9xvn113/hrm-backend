@@ -16,7 +16,7 @@ public interface DocumentRepository extends JpaRepository<DocumentEntity, Long> 
 
     Page<DocumentEntity> searchAllByNameContainingIgnoreCase(String search, Pageable pageable);
 
-    Page<DocumentEntity> searchAllByNameContainingIgnoreCaseAndParentId(String search, Long parentId, Pageable pageable);
+    Page<DocumentEntity> searchAllByNameContainingIgnoreCaseAndParentIdAndPkIdAndAppId(String search, Long parentId, Long pkId, String appId, Pageable pageable);
 
     Optional<DocumentEntity> findByNameAndParentId(String name, Long parentId);
 

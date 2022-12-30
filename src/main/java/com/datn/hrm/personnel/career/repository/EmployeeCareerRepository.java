@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface EmployeeCareerRepository extends JpaRepository<EmployeeCareerEntity, Long> {
 
-    Page<EmployeeCareerEntity> getAllByEmployeeId(Long employeeId, Pageable pageable);
+    Page<EmployeeCareerEntity> getAllByEmployeeIdOrderByModifiedDateDesc(Long employeeId, Pageable pageable);
 
     @Query(value = "select e from EmployeeCareerEntity e " +
             "where e.employeeId = :employeeId and e.effectiveDate <= :date " +
@@ -21,5 +21,5 @@ public interface EmployeeCareerRepository extends JpaRepository<EmployeeCareerEn
     )
     List<EmployeeCareerEntity> getEmployeeCareers(long employeeId, Date date);
 
-    EmployeeCareerEntity getEmployeeCareerEntityByPkId(Long pkId);
+    EmployeeCareerEntity getEmployeeCareerEntityByPkIdAndStatus(Long pkId, String status);
 }

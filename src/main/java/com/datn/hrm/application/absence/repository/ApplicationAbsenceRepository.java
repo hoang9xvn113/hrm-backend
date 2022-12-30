@@ -21,7 +21,5 @@ public interface ApplicationAbsenceRepository extends JpaRepository<ApplicationA
 
     Page<ApplicationAbsenceEntity> getAllByEmployee(EmployeeEntity employee, Pageable pageable);
 
-//    Page<ApplicationAbsenceEntity> searchAllByNameContainingIgnoreCase(Pageable pageable);
-
     List<ApplicationAbsenceEntity> getAllByDateBetweenAndReason(Date fromDate, Date toDate, AbsenceReasonEntity absenceReasonEntity);
 }

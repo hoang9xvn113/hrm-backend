@@ -27,10 +27,10 @@ import java.util.Optional;
 @Service
 public class DocumentService {
 
-    public Page<Document> getPage(Long parentId, String search, Pageable pageable, String sort, String filter) {
+    public Page<Document> getPage(Long pkId, String appId, Long parentId, String search, Pageable pageable, String sort, String filter) {
 
         return mapper.mapDtoEntityFromEntityPage(
-                repository.searchAllByNameContainingIgnoreCaseAndParentId(search, parentId, pageable)
+                repository.searchAllByNameContainingIgnoreCaseAndParentIdAndPkIdAndAppId(search, parentId, pkId, appId, pageable)
         );
     }
 
@@ -77,7 +77,7 @@ public class DocumentService {
     }
 
     @Transactional(rollbackOn = {Exception.class, IOException.class})
-    public void createFolder(Long parentId, String name) throws IOException {
+    public void createFolder(Long parentId, String name, Long pkId, String appId) throws IOException {
 
         Path path = getPath(name, parentId);
 
@@ -89,14 +89,16 @@ public class DocumentService {
                         path.toString(),
                         DefaultValue.LONG,
                         null,
-                        null
+                        null,
+                        pkId,
+                        appId
                 )
         );
 
         Files.createDirectory(path);
     }
 
-    public void uploadFile(Long parentId, String action, MultipartFile multipartFile) throws GeneralSecurityException, IOException, URISyntaxException {
+    public void uploadFile(Long pkId, String appId, Long parentId, String action, MultipartFile multipartFile) throws GeneralSecurityException, IOException, URISyntaxException {
 
         String name = multipartFile.getOriginalFilename();
 
@@ -131,7 +133,9 @@ public class DocumentService {
                 path.toString(),
                 multipartFile.getSize(),
                 multipartFile.getContentType(),
-                extension
+                extension,
+                pkId,
+                appId
         ));
 
         Files.copy(multipartFile.getInputStream(), path);

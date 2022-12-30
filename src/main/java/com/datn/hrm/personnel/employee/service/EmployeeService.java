@@ -17,7 +17,7 @@ public class EmployeeService implements IService<Employee> {
     public Page<Employee> getPage(String search, Pageable pageable, String sort, String filter) {
 
         return mapper.mapDtoEntityFromEntityPage(
-                repository.searchAllByNameContainingIgnoreCase(search, pageable)
+                repository.searchAllByNameContainingIgnoreCaseOrderByModifiedDateDesc(search, pageable)
         );
     }
 

@@ -6,6 +6,7 @@ import com.datn.hrm.application.resignation.mapper.ApplicationResignationMapper;
 import com.datn.hrm.application.resignation.repository.ApplicationResignationRepository;
 import com.datn.hrm.common.service.IService;
 import com.datn.hrm.common.utils.DefaultValue;
+import com.datn.hrm.common.utils.EStatus;
 import com.datn.hrm.common.validator.ValidatorUtils;
 import com.datn.hrm.personnel.career.service.EmployeeCareerService;
 import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
@@ -63,7 +64,7 @@ public class ApplicationResignationService implements IService<ApplicationResign
 
         entity.setStatus(status);
 
-        if (status.equalsIgnoreCase("approved")) {
+        if (status.equalsIgnoreCase(EStatus.APPROVED.getValue())) {
 
             employeeCareerService.addObject(
                     entity.getEmployee().getId(),
@@ -72,11 +73,11 @@ public class ApplicationResignationService implements IService<ApplicationResign
                     DefaultValue.LONG,
                     DefaultValue.LONG,
                     entity.getDate(),
-                    "cancel",
+                    EStatus.CANCEL.getValue(),
                     entity.getId()
             );
         } else {
-            employeeCareerService.deleteObjectByPkId(entity.getId());
+            employeeCareerService.deleteObjectByPkId(entity.getId(), EStatus.CANCEL.getValue());
         }
 
         return mapper.mapDtoFromEntity(repository.save(entity));

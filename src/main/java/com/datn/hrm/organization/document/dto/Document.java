@@ -13,6 +13,10 @@ public class Document {
 
     String name;
 
+    Long pkId;
+
+    String appId;
+
     String type;
 
     String contentType;
