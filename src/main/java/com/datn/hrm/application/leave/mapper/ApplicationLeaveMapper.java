@@ -29,6 +29,7 @@ public class ApplicationLeaveMapper implements IMapper<ApplicationLeave, Applica
         dto.setName(entity.getName());
 
         dto.setEmployee(employeeMapper.mapDtoFromEntity(entity.getEmployee()));
+        dto.setReviewer(employeeMapper.mapDtoFromEntity(entity.getReviewer()));
         dto.setReason(leaveReasonMapper.mapDtoFromEntity(entity.getReason()));
         dto.setStartShift(entity.getStartShift());
         dto.setStartDate(entity.getStartDate());
@@ -62,6 +63,7 @@ public class ApplicationLeaveMapper implements IMapper<ApplicationLeave, Applica
 
 //        entity.setName(dto.getName().trim());
 
+        entity.setReviewer(employeeRepository.getReferenceById(dto.getReviewer().getId()));
         entity.setReason(leaveReasonRepository.getReferenceById(dto.getReason().getId()));
         entity.setStartDate(dto.getStartDate());
         entity.setStartShift(dto.getStartShift());

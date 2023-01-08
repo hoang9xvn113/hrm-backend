@@ -29,6 +29,7 @@ public class ApplicationAbsenceMapper implements IMapper<ApplicationAbsence, App
         dto.setName(entity.getName());
 
         dto.setEmployee(employeeMapper.mapDtoFromEntity(entity.getEmployee()));
+        dto.setReviewer(employeeMapper.mapDtoFromEntity(entity.getReviewer()));
         dto.setReason(absenceReasonMapper.mapDtoFromEntity(entity.getReason()));
         dto.setDate(entity.getDate());
         dto.setStartTime(entity.getStartTime());
@@ -61,6 +62,7 @@ public class ApplicationAbsenceMapper implements IMapper<ApplicationAbsence, App
 
 //        entity.setName(dto.getName().trim());
 
+        entity.setReviewer(employeeRepository.getReferenceById(dto.getReviewer().getId()));
         entity.setReason(absenceReasonRepository.getReferenceById(dto.getReason().getId()));
         entity.setDate(dto.getDate());
         entity.setStartTime(dto.getStartTime());

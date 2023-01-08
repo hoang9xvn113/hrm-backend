@@ -28,6 +28,7 @@ public class ApplicationResignationMapper implements IMapper<ApplicationResignat
 
         dto.setName(entity.getName());
 
+        dto.setReviewer(employeeMapper.mapDtoFromEntity(entity.getReviewer()));
         dto.setEmployee(employeeMapper.mapDtoFromEntity(entity.getEmployee()));
         dto.setReason(resignationReasonMapper.mapDtoFromEntity(entity.getReason()));
         dto.setDate(entity.getDate());
@@ -59,6 +60,7 @@ public class ApplicationResignationMapper implements IMapper<ApplicationResignat
 //        entity.setName(dto.getName().trim());
 
         entity.setReason(resignationReasonRepository.getReferenceById(dto.getReason().getId()));
+        entity.setReviewer(employeeRepository.getReferenceById(dto.getReviewer().getId()));
         entity.setDate(dto.getDate());
         entity.setDescription(dto.getDescription());
 

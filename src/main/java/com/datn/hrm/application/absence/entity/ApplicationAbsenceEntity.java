@@ -2,9 +2,7 @@ package com.datn.hrm.application.absence.entity;
 
 import com.datn.hrm.common.utils.EStatus;
 import com.datn.hrm.personnel.employee.entity.EmployeeEntity;
-import com.datn.hrm.setting.application.absence.dto.AbsenceReason;
 import com.datn.hrm.setting.application.absence.entity.AbsenceReasonEntity;
-import com.datn.hrm.setting.application.leave.entity.LeaveReasonEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,6 +32,10 @@ public class ApplicationAbsenceEntity {
     @OneToOne()
     @JoinColumn(name = "reasonId", referencedColumnName = "id")
     private AbsenceReasonEntity reason;
+
+    @OneToOne()
+    @JoinColumn(name = "reviewer", referencedColumnName = "id")
+    private EmployeeEntity reviewer;
 
     @Column
     Date date;
@@ -70,6 +72,6 @@ public class ApplicationAbsenceEntity {
     void prePersist() {
         this.createDate = new Date();
         this.modifiedDate = new Date();
-        this.status = EStatus.PENDING.getValue();
+        this.status = EStatus.DRAFT.getValue();
     }
 }

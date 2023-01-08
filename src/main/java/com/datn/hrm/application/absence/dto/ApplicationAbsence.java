@@ -18,6 +18,8 @@ public class ApplicationAbsence {
 
     Employee employee;
 
+    Employee reviewer;
+
     AbsenceReason reason;
 
     Date date;

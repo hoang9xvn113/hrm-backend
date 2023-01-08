@@ -3,7 +3,6 @@ package com.datn.hrm.application.absence.validator;
 import com.datn.hrm.application.absence.dto.ApplicationAbsence;
 import com.datn.hrm.application.absence.entity.ApplicationAbsenceEntity;
 import com.datn.hrm.application.absence.repository.ApplicationAbsenceRepository;
-import com.datn.hrm.application.leave.entity.ApplicationLeaveEntity;
 import com.datn.hrm.application.utils.ApplicationUtils;
 import com.datn.hrm.common.exception.model.BadRequestException;
 import com.datn.hrm.common.exception.model.DuplicateException;

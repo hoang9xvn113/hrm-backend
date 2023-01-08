@@ -10,6 +10,7 @@ import com.datn.hrm.common.controller.IController;
 import com.datn.hrm.common.function.CommonPage;
 import com.datn.hrm.login.dto.UserModel;
 import com.datn.hrm.login.provider.JwtTokenProvider;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -84,11 +85,11 @@ public class ApplicationResignationController implements IController<Application
     public ApplicationResignation putObjectStatus(
             @RequestHeader("api-key") String apiKey,
             @PathVariable long id,
-            @RequestBody ApplicationResignation dto) {
+            @RequestBody ApplicationResignation dto) throws FirebaseMessagingException {
 
         UserModel userModel = provider.getUserFromToken(apiKey);
 
-        return service.putObject(id, dto.getStatus());
+        return service.putObject(id, userModel.getAccountId(), userModel.getFullName(), dto.getStatus());
     }
 
     @Autowired

@@ -26,6 +26,8 @@ public class Contract {
 
     Employee employee;
 
+    Employee reviewer;
+
     ContractType contractType;
 
     JobTitle jobTitle;

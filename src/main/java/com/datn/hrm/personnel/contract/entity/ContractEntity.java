@@ -63,6 +63,10 @@ public class ContractEntity {
     )
     List<AllowanceEntity> allowanceEntities;
 
+    @ManyToOne
+    @JoinColumn(name = "reviewer", nullable = false)
+    private EmployeeEntity reviewer;
+
     @Column
     Date effectiveDate;
 
@@ -91,6 +95,6 @@ public class ContractEntity {
     void prePersist() {
         this.createDate = new Date();
         this.modifiedDate = new Date();
-        this.status = EStatus.PENDING.getValue();
+        this.status = EStatus.DRAFT.getValue();
     }
 }

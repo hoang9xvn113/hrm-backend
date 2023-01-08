@@ -8,6 +8,7 @@ import com.datn.hrm.login.provider.JwtTokenProvider;
 import com.datn.hrm.personnel.contract.dto.Contract;
 import com.datn.hrm.personnel.contract.service.ContractService;
 import com.datn.hrm.personnel.contract.validator.ContractValidator;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -82,11 +83,11 @@ public class ContractController implements IController<Contract> {
     public Contract putObjectStatus(
             @RequestHeader("api-key") String apiKey,
             @PathVariable long id,
-            @RequestBody Contract dto) {
+            @RequestBody Contract dto) throws FirebaseMessagingException {
 
         UserModel userModel = provider.getUserFromToken(apiKey);
 
-        return service.putObject(id, dto.getStatus());
+        return service.putObject(id, userModel.getAccountId(), userModel.getFullName(), dto.getStatus());
     }
 
     @Autowired

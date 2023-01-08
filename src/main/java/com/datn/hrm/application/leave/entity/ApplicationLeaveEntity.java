@@ -33,6 +33,10 @@ public class ApplicationLeaveEntity {
     @JoinColumn(name = "reasonId", referencedColumnName = "id")
     private LeaveReasonEntity reason;
 
+    @OneToOne()
+    @JoinColumn(name = "reviewer", referencedColumnName = "id")
+    private EmployeeEntity reviewer;
+
     @Column
     String startShift;
 
@@ -74,6 +78,6 @@ public class ApplicationLeaveEntity {
     void prePersist() {
         this.createDate = new Date();
         this.modifiedDate = new Date();
-        this.status = EStatus.PENDING.getValue();
+        this.status = EStatus.DRAFT.getValue();
     }
 }

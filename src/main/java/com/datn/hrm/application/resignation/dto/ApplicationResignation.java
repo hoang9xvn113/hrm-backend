@@ -17,6 +17,8 @@ public class ApplicationResignation {
 
     Employee employee;
 
+    Employee reviewer;
+
     ResignationReason reason;
 
     Date date;

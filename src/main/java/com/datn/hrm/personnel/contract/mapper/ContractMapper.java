@@ -49,6 +49,7 @@ public class ContractMapper implements IMapper<Contract, ContractEntity> {
         dto.setDepartment(departmentMapper.mapDtoFromEntity(entity.getDepartmentEntity()));
         dto.setJobTitle(jobTitleMapper.mapDtoFromEntity(entity.getJobTitleEntity()));
         dto.setJobPosition(jobPositionMapper.mapDtoFromEntity(entity.getJobPositionEntity()));
+        dto.setReviewer(employeeMapper.mapDtoFromEntity(entity.getReviewer()));
 
         dto.setAllowances(
                 entity.getAllowanceEntities().
@@ -107,6 +108,7 @@ public class ContractMapper implements IMapper<Contract, ContractEntity> {
         entity.setDepartmentEntity(departmentRepository.findById(dto.getDepartment().getId()).get());
         entity.setJobPositionEntity(jobPositionRepository.findById(dto.getJobPosition().getId()).get());
         entity.setJobTitleEntity(jobTitleRepository.findById(dto.getJobTitle().getId()).get());
+        entity.setReviewer(employeeRepository.findById(dto.getReviewer().getId()).get());
 
         if (ValidatorUtils.isNotNull(dto.getAllowances())) {
             entity.setAllowanceEntities(

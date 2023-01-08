@@ -33,6 +33,10 @@ public class ApplicationResignationEntity {
     @JoinColumn(name = "reasonId", referencedColumnName = "id")
     private ResignationReasonEntity reason;
 
+    @OneToOne()
+    @JoinColumn(name = "reviewer", referencedColumnName = "id")
+    private EmployeeEntity reviewer;
+
     @Column
     Date date;
 
@@ -62,6 +66,6 @@ public class ApplicationResignationEntity {
     void prePersist() {
         this.createDate = new Date();
         this.modifiedDate = new Date();
-        this.status = EStatus.PENDING.getValue();
+        this.status = EStatus.DRAFT.getValue();
     }
 }

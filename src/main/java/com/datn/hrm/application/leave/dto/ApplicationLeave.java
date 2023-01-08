@@ -18,6 +18,8 @@ public class ApplicationLeave {
 
     Employee employee;
 
+    Employee reviewer;
+
     LeaveReason reason;
 
     String startShift;
